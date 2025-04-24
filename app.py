@@ -1,11 +1,11 @@
 
 import streamlit as st
 import pandas as pd
-import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+import os
 
-# Función para generar el PDF
+# Función para generar el PDF (sin imagen desde URL)
 def generar_pdf(fila):
     nombre_archivo = f"{fila['Nombre completo'].replace(' ', '_')}.pdf"
     ruta_pdf = f"/tmp/{nombre_archivo}"
@@ -16,11 +16,6 @@ def generar_pdf(fila):
     c.setFont("Helvetica-Bold", 14)
     c.drawString(50, y, f"Ficha de: {fila['Nombre completo']}")
     y -= 30
-
-    if pd.notna(fila["Foto"]):
-        ruta_foto = f"Fotos/{fila['Foto']}"
-        if os.path.exists(ruta_foto):
-            c.drawImage(ruta_foto, 400, y - 100, width=120, height=120)
 
     c.setFont("Helvetica", 10)
     for columna, valor in fila.items():
@@ -52,11 +47,7 @@ if nombre:
         for _, fila in resultados.iterrows():
             st.markdown("---")
             if pd.notna(fila["Foto"]):
-                ruta_foto = f"Fotos/{fila['Foto']}"
-                if os.path.exists(ruta_foto):
-                    st.image(ruta_foto, width=200)
-                else:
-                    st.warning(f"No se encontró la imagen: {ruta_foto}")
+                st.image(fila["Foto"], width=200)
             for columna, valor in fila.items():
                 if columna != "Foto":
                     st.markdown(f"**{columna}:** {valor}")

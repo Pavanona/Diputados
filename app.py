@@ -16,7 +16,10 @@ if nombre:
     resultados = df[df["Nombre completo"].str.contains(nombre, case=False, na=False)]
     if not resultados.empty:
         st.success(f"Se encontraron {len(resultados)} resultado(s).")
-        st.dataframe(resultados, use_container_width=True)
+        for _, fila in resultados.iterrows():
+            st.markdown("---")
+            for columna, valor in fila.items():
+                st.markdown(f"**{columna}:** {valor}")
     else:
         st.warning("No se encontraron resultados.")
 else:

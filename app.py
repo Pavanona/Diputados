@@ -18,15 +18,15 @@ def generar_pdf(fila):
     y -= 30
 
     if pd.notna(fila["Foto"]):
-        ruta_foto = f"fotos/{fila['Foto']}"
+        ruta_foto = f"Fotos/{fila['Foto']}"
         if os.path.exists(ruta_foto):
             c.drawImage(ruta_foto, 400, y - 100, width=120, height=120)
-    
+
     c.setFont("Helvetica", 10)
     for columna, valor in fila.items():
         if columna != "Foto":
             texto = f"{columna}: {valor}"
-            c.drawString(50, y, texto[:110])  # Limitar largo por línea
+            c.drawString(50, y, texto[:110])
             y -= 15
             if y < 100:
                 c.showPage()
@@ -51,18 +51,15 @@ if nombre:
         st.success(f"Se encontraron {len(resultados)} resultado(s).")
         for _, fila in resultados.iterrows():
             st.markdown("---")
-            # Mostrar foto si existe
             if pd.notna(fila["Foto"]):
-                ruta_foto = f"fotos/{fila['Foto']}"
+                ruta_foto = f"Fotos/{fila['Foto']}"
                 if os.path.exists(ruta_foto):
                     st.image(ruta_foto, width=200)
                 else:
                     st.warning(f"No se encontró la imagen: {ruta_foto}")
-            # Mostrar datos verticales
             for columna, valor in fila.items():
                 if columna != "Foto":
                     st.markdown(f"**{columna}:** {valor}")
-            # Botón para generar PDF
             if st.button(f"📄 Descargar ficha PDF de {fila['Nombre completo']}", key=fila['Nombre completo']):
                 ruta_pdf, nombre_archivo = generar_pdf(fila)
                 with open(ruta_pdf, "rb") as f:
